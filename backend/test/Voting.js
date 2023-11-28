@@ -28,4 +28,14 @@ describe("Voting", function () {
     });
   });
 
+  describe("Create vote", () => {
+    it("Non-member can not create vote", async () => {
+      await expect(votingContract.connect(addr1).createVote("myRandomUri", (await getTime() + 60), 3)).to.be.reverted;
+    });
+
+    it("Member can create vote", async () => {
+      await expect(votingContract.connect(addr0).createVote("myRandomUri", (await getTime() + 60), 5)).to.emit(votingContract, "VoteCreated");
+    });
+  });
+
 });
