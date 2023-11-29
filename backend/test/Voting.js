@@ -34,7 +34,24 @@ describe("Voting", function () {
     });
 
     it("Member can create vote", async () => {
-      await expect(votingContract.connect(addr0).createVote("myRandomUri", (await getTime() + 60), 5)).to.emit(votingContract, "VoteCreated");
+      await expect(votingContract.createVote("myRandomUri", (await getTime() + 60), 5)).to.emit(votingContract, "VoteCreated");
+    });
+
+    it("Member can not create a vote with invalid number", async () => {
+      await expect(votingContract.createVote("myRandomUri", (await getTime() - 1), 5)).to.be.reverted;
+    });
+
+    it("Member can not create a vote with more than allowed options", async () => {
+      await expect(votingContract.createVote("myRandomUri", (await getTime() + 30), 8)).to.be.reverted;
+    });
+
+    it("Member can not create a vote with less than allowed options", async () => {
+      await expect(votingContract.createVote("myRandomUri", (await getTime() + 30), 1)).to.be.reverted;
+    });
+
+    // Take a deeper look -> 2 votes with same URI - should be allowed or not?
+    it("Member can create a second vote", async () => {
+      await expect(votingContract.createVote("myRandomUri", (await getTime() + 30), 4)).to.emit(votingContract, "VoteCreated");
     });
   });
 
