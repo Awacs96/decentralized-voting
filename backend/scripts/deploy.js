@@ -10,9 +10,9 @@ const fs = require("fs/promises");
 async function main() {
 
   const Voting = await hre.ethers.getContractFactory("Voting");
-  const voting = await Voting.deployed();
+  const voting = await Voting.deploy();
 
-  await voting.deployed();
+  await voting.waitForDeployment();
   await getDeploymentData(voting, "Voting.json");
 
 }
@@ -21,7 +21,7 @@ async function getDeploymentData(contract, filename="") {
   const data = {
     contract: {
       address: contract.address,
-      signerAddress: contract.signer.address,
+      signerAddress: contract.signerAddress,
       abi: contract.interface.format(),
     },
   };

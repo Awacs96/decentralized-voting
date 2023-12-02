@@ -14,7 +14,7 @@ contract Voting {
     }
 
     mapping(uint => Vote) votes;
-    mapping(address => bool) isMember;
+    mapping(address => bool) public isMember;
 
     event MemberJoined(address indexed member, uint joinedAt);
     event VoteCreated(address indexed owner, uint indexed voteId, uint indexed createdAt, uint endTime);
