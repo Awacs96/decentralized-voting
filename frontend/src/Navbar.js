@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 
-const NavbarTop = () => {
+const NavbarTop = ({ connect, connected, becomeMember, isMember }) => {
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Container fluid>
@@ -13,10 +13,16 @@ const NavbarTop = () => {
                     <Nav className="me-auto">
                         <Nav.Link href="/votes">Votes</Nav.Link>
                         <Nav.Link href="/create-vote">Create a Vote</Nav.Link>
-                        <Button variant="success">Become Member</Button>
+                        {!isMember && (
+                            <Button variant="success" onClick={ becomeMember }>Become Member</Button>
+                        )}
                     </Nav>
                     <Nav>
-                        <Button>Connect to Metamask</Button>
+                        { !connected ? 
+                            ( <Button onClick={ connect }>Connect to Metamask</Button>
+                        ) : (
+                                <p style={{ color: "white" }}>Connected to Metamask</p>
+                        ) }
                     </Nav>
                 </Navbar.Collapse>
             </Container>

@@ -9,9 +9,10 @@ const abi = [
     "function didVote(address member, uint256 voteId) view returns (bool)",
     "function getVote(uint256 voteId) view returns (string, address, uint256[], uint256)",
     "function join()",
+    "function members(address) view returns (bool)",
     "function vote(uint256 voteId, uint256 option)"
   ];
-const provider = new ethers.provider.Web3Provider(window.ethereum);
+const provider = new ethers.BrowserProvider(window.ethereum);
 
 export const connect = async () => {
     await provider.send("eth_requestAccounts", []);
@@ -19,7 +20,7 @@ export const connect = async () => {
 }
 
 export const getContract = async () => {
-    const signer = provider.getSigner();
+    const signer = await provider.getSigner();
     const contract = new ethers.Contract(address, abi, signer);
     return { signer: signer, contract: contract };
 }

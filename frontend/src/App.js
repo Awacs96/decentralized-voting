@@ -22,23 +22,43 @@ function App() {
 
   const handleInit = () => {
     setConnected(true);
-    const { contract, signer } = getContract();
+    getContract().then(({ contract, signer }) => {
+      setContract(contract);
+
+      if (contract) {
+        signer.getAddress().then((address) => {
+          contract.members(address).then((result) => setIsMember(result));
+        });
+      }
+    });
+  };
+
+  const connectCallback = async () => {
+    const { contract } = await connect();
     setContract(contract);
 
     if (contract) {
-      signer.getAddress().then((address) => {
-        contract.members(address).then((result) => setIsMember(result));
-      });
+      setConnected(true);
     }
-  };
+  }
 
-  // Next: npx hardhat node + separate terminal npx hardhat run scripts/deploy.js --network localhost
+  const becomeMember = async () => {
+    if (!contract) {
+      alert("Please connect to the Metamask.");
+      return;
+    }
+
+    await contract.join().then(() => {
+      alert("Joined");
+      setIsMember(true);
+    }).catch((error) => alert(error.message));
+  }
 
   return <Router>
-    <Navbar/>
+    <Navbar connect={ connectCallback } connected={ connected } becomeMember={ becomeMember } isMember={ isMember } />
     <div>
       <Routes>
-        <Route path="create-vote" element={ <CreateVotes /> } />
+        <Route path="create-vote" element={ <CreateVotes contract={ contract } /> } />
         <Route path="votes" element={ <Votes /> } />
       </Routes>
     </div>
